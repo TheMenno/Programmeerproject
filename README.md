@@ -4,6 +4,8 @@ Eindvak van de minor 'Programmeren'
 # Project Proposal
 #### Calorie teller app – Menno Lont (11061200)
 
+#### Zie 'Ontwerp app eindproject.pdf' voor een wireframe van de applicatie.
+
 ### Probleem
 Mensen weten niet hoeveel ze eten op een dag, en/of vinden het moeilijk om af te vallen.
 

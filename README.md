@@ -8,14 +8,14 @@ Eindvak van de minor 'Programmeren'
 Mensen weten niet hoeveel ze eten op een dag, en/of vinden het moeilijk om af te vallen.
 
 ### Doelgroep
-Afvallers, health freaks, sporters
+Mensen die willen afvallen, mensen die zich erg op gezondheid focussen, sporters.
 
 ### Functionaliteit
-Tellen aantal calorieën per dag, een streefgewicht en tijdsperiode geven om de benodigde hoeveelheid calorieën per dag te berekenen, voortgang bekijken over langere periode. (Als er nog tijd is: bijhouden hoeveel vitamines je binnen krijgt)
+Tellen aantal calorieën per dag, een streefgewicht en tijdsperiode geven om de benodigde hoeveelheid calorieën per dag te berekenen, voortgang bekijken over langere periode. (Als er tijd voor is: bijhouden hoeveel vitamines je binnen krijgt).
 
 ### Applicatieschermen
 #### Calorielijst
-Standaard op ‘huidige datum’ (checkt in telefoon). Komt op een pagina met een lijst waar je naar verschillende dagdelen kan gaan om geconsumeerd voedsel in te vullen. Som van huidige calorietelling van die dag onderin. Kan ook naar links swipen om op voorgaande dagen te komen 
+Standaard op ‘huidige datum’ (checkt in telefoon). Komt op een pagina met een lijst waar je naar verschillende dagdelen kan gaan om geconsumeerd voedsel in te vullen. Som van huidige calorietelling van die dag onderin. Kan ook naar links swipen om op voorgaande dagen te komen .
 #### Datumkiezer	
 Pop-up op scherm ‘Vandaaglijst’. De gebruiker kan een datum kiezen om voor die dag de geconsumeerde calorieën in te zien of aan te passen.
 #### Voedingsproduct

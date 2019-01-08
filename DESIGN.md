@@ -8,8 +8,12 @@
 <img src="https://github.com/TheMenno/Programmeerproject/blob/master/doc/UserDiagram.png" width="300">
 Deze database slaat informatie op over de gebruiker die nodig is voor het gebruik van de app. De gebruiker vult deze informatie bij het eerste gebruik van de applicatie in. Velden zoals lengte, gewicht, geslacht en leeftijd zijn nodig omdat deze de noodzakelijke hoeveelheid calorieën per dag beïnvloeden. Omdat er maar 1 gebruiker per applicatie kan zijn is alleen een aanpassingsfunctie nodig. De gebruiker kan zelf zijn/haar gegevens aanpassen wanneer zij dit nodig achten. Regelmatig aanpassen van het gewicht is aangeraden om voortgang bij afvallen bij te houden.
 
+<br><br><br>
+
 <img src="https://github.com/TheMenno/Programmeerproject/blob/master/doc/FoodDiagram.png" width="300">
 Deze database slaat informatie op over de door de gebruiker ingevulde geconsumeerde producten. Deze producten kunnen worden toegevoegd, aangepast en/of worden verwijderd. 
+
+<br><br><br>
 
 Er worden ook een Request functie en drie adapters gebruikt in de applicatie, hiervoor is echter geen heel diagram nodig dus ze staan hier op een rijtje:
 

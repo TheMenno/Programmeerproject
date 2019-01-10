@@ -6,15 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class GraphActivity extends AppCompatActivity {
+public class FoodActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_graph);
+        setContentView(R.layout.activity_food);
 
-        Button backButton = findViewById(R.id.graphBackButton);
-        backButton.setOnClickListener(new GraphActivity.ButtonClickListener());
+        Button backButton = findViewById(R.id.foodBackButton);
+        Button searchButton = findViewById(R.id.foodSearchButton);
+
+        backButton.setOnClickListener(new FoodActivity.ButtonClickListener());
+        //searchButton.setOnClickListener(new FoodActivity.ButtonClickListener());
     }
 
 
@@ -31,7 +34,7 @@ public class GraphActivity extends AppCompatActivity {
     // Go to the next screen
     public void goToNext() {
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MealActivity.class);
         startActivity(intent);
     }
 }

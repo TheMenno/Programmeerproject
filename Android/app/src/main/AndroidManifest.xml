@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.menno_000.programmeerproject">
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,7 @@
         <activity android:name=".MealActivity"></activity>
         <activity android:name=".UserActivity"></activity>
         <activity android:name=".GraphActivity"></activity>
+        <activity android:name=".FoodActivity"></activity>
     </application>
 
 </manifest>

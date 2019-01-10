@@ -3,31 +3,60 @@ package com.example.menno_000.programmeerproject;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements FoodRequest.Callback {
 
     Class activity;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ListView listview = findViewById(R.id.mainList);
+        FoodRequest request = new FoodRequest(this);
+        request.getFood(this);
+
+        listView = findViewById(R.id.mainList);
         Button graphButton = findViewById(R.id.mainGraphButton);
         Button userButton = findViewById(R.id.mainUserButton);
 
-        //ListView.setOnItemClickListener(new MealItemClickListener());
+        //listView.setOnItemClickListener(new MealItemClickListener());
         graphButton.setOnClickListener(new MainActivity.ButtonClickListener());
         userButton.setOnClickListener(new MainActivity.ButtonClickListener());
     }
 
 
-    // Listener for the "Get started!" button, go to the next screen
+    // Create a game when the food items are loaded successfully
+    @Override
+    public void gotFood(ArrayList<String> response) {
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, response);
+
+        listView.setAdapter(arrayAdapter);
+    }
+
+
+    // Error message
+    @Override
+    public void gotFoodError(String message) {
+
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
+
+        // Listener for the buttons, go to the next/previous screen
     public class ButtonClickListener implements View.OnClickListener {
 
         @Override

@@ -23,7 +23,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
 
-    // Listener for the "Get started!" button, go to the next screen
+    // Listener for the buttons, go to the next/previous screen
     public class ButtonClickListener implements View.OnClickListener {
 
         @Override
@@ -46,13 +46,16 @@ public class UserActivity extends AppCompatActivity {
         switch (clickedButton) {
             case("back"):
                 activity = MainActivity.class;
+
+                Intent intent = new Intent(this, activity);
+                startActivity(intent);
                 break;
             case("edit"):
                 // Do something
                 break;
         }
 
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
+        //Intent intent = new Intent(this, activity);
+        //startActivity(intent);
     }
 }

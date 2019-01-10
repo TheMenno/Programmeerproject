@@ -23,7 +23,7 @@ public class MealActivity extends AppCompatActivity {
     }
 
 
-    // Listener for the "Get started!" button, go to the next screen
+    // Listener for the buttons, go to the next/previous screen
     public class ButtonClickListener implements View.OnClickListener {
 
         @Override
@@ -48,7 +48,7 @@ public class MealActivity extends AppCompatActivity {
                 activity = MainActivity.class;
                 break;
             case("add"):
-                //activity = FoodActivity.class;
+                // do something
                 break;
         }
 

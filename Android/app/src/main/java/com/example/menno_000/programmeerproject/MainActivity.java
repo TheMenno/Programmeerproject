@@ -1,5 +1,6 @@
 package com.example.menno_000.programmeerproject;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,16 +9,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements FoodRequest.Callback {
 
     Class activity;
     ListView listView;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements FoodRequest.Callb
         request.getFood(this);
 
         listView = findViewById(R.id.mainList);
+        textView = findViewById(R.id.mainDatePicker);
         Button graphButton = findViewById(R.id.mainGraphButton);
         Button userButton = findViewById(R.id.mainUserButton);
 
@@ -55,8 +60,7 @@ public class MainActivity extends AppCompatActivity implements FoodRequest.Callb
     }
 
 
-
-        // Listener for the buttons, go to the next/previous screen
+    // Listener for the buttons, go to the next/previous screen
     public class ButtonClickListener implements View.OnClickListener {
 
         @Override

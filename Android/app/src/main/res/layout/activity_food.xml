@@ -58,10 +58,11 @@
         android:background="@color/white">
 
         <EditText
+            android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Enter the name of the food you've eaten"/>
+            android:hint="Enter the name of the food you've eaten"/>
 
         <Button
             android:id="@+id/foodSearchButton"

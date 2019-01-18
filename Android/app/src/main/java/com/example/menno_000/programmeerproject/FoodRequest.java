@@ -20,7 +20,7 @@ public class FoodRequest implements Response.Listener<JSONObject>, Response.Erro
     private Context context;
     private Callback callback;
 
-    // A callback to the main activity
+    // A callback to the previous activity
     public interface Callback {
         void gotFood(ArrayList<String> food);
         void gotFoodError(String message);
@@ -29,17 +29,17 @@ public class FoodRequest implements Response.Listener<JSONObject>, Response.Erro
 
     // Constructor
     public FoodRequest(Context context) {
+
         this.context = context;
     }
 
     // Connect to the api
-    public void getFood(Callback call) {
+    public void getFood(Callback call, String search) {
 
         // Set up a queue
         RequestQueue queue = Volley.newRequestQueue(context);
 
         // Create the data request
-        String search = "bread";
         String offset = "0";
         String amount = "200";
         String key = "nGHKa4ZmkXSTIiLWoLIzQKVs3jHIWAcvH0l8OGGI";

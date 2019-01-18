@@ -29,6 +29,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/meal_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -53,13 +54,13 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="15dp"
         android:layout_weight="1">
 
         <ListView
-            android:id="@+id/mealList"
+            android:id="@+id/meal_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
             android:background="@color/white">
 
         </ListView>
@@ -85,6 +86,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/meal_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

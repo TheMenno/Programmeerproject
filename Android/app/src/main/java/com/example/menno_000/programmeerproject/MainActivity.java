@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
     Class activity;
     TextView dateView;
     ArrayList<ArrayList> listItems = new ArrayList<>();
-    Integer totalCal = 0;
+    Integer totalCal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
 
         // ListView Adapter
         PrepareAdapter();
-        ListView listView = findViewById(R.id.listView_main);
+        ListView listView = findViewById(R.id.main_list);
         MainAdapter adapter = new MainAdapter(this, R.layout.entryrow_main, listItems);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new MealItemClickListener());
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
         dateView.setText(day + ", " + daynumber + " " + monthString);
 
         // Total
-        TextView totalView = findViewById(R.id.calorie_total);
+        TextView totalView = findViewById(R.id.main_total);
         totalView.setText("Total: " + totalCal + " calories");
     }
 
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
             // Give info to new view
             Intent intent = new Intent(MainActivity.this, MealActivity.class);
             intent.putExtra("clickedMeal", clickedMeal);
+            intent.putExtra("calories", totalCal);
             startActivity(intent);
         }
     }

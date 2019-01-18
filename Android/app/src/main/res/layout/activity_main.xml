@@ -21,7 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Graph"/>
+            android:text="Graph"
+            android:visibility="invisible"/>
 
         <View
             android:layout_width="0dp"
@@ -49,7 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="User"/>
+            android:text="User"
+            android:visibility="invisible"/>
     </LinearLayout>
 
 

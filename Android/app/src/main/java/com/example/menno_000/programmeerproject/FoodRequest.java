@@ -14,15 +14,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FoodRequest implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     private Context context;
     private Callback callback;
 
-    // A callback to the previous activity
     public interface Callback {
-        void gotFood(ArrayList<String> food);
+        void gotFood(ArrayList<ArrayList> food);
         void gotFoodError(String message);
     }
 
@@ -46,7 +46,7 @@ public class FoodRequest implements Response.Listener<JSONObject>, Response.Erro
 
         // Create the url
         String url ="https://api.nal.usda.gov/ndb/search/?format=json&q=" + search + "&max=" +
-                amount + "&offset=" + offset + "&api_key=" + key;
+                amount + "&offset=" + offset + "&api_key=" + key + "&ds=Standard Reference&sort=r";
 
         // Create the request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
@@ -74,7 +74,7 @@ public class FoodRequest implements Response.Listener<JSONObject>, Response.Erro
             JSONArray raw_JSON = raw_JSONObject.getJSONArray("item");
 
             // Set up a container
-            ArrayList<String> raw_Strings = new ArrayList<>();
+            ArrayList<ArrayList> raw_values = new ArrayList<>();
 
             // Separate the questions
             for (int i = 0; i < raw_JSON.length(); i++) {
@@ -83,20 +83,21 @@ public class FoodRequest implements Response.Listener<JSONObject>, Response.Erro
 
                 if(manufactor.equals("none")) {
                     String name = raw_food.getString("name");
+                    Integer id = raw_food.getInt("ndbno");
 
                     if(name.equals(name.toUpperCase())) {
                         continue;
                     } else {
-                        raw_Strings.add(name);
+                        raw_values.add( new ArrayList<>(Arrays.asList(id, name) ));
                     }
                 }
             }
 
-            callback.gotFood(raw_Strings);
+            callback.gotFood(raw_values);
         } catch (JSONException e) {
             // Error message
             e.printStackTrace();
-            callback.gotFoodError("JSONException");
+            callback.gotFoodError("No results found, try something else!");
         }
     }
 

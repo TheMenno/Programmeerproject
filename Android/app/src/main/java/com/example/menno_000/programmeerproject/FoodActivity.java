@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,10 +21,13 @@ import java.util.Comparator;
 import javax.security.auth.callback.Callback;
 
 import static java.lang.String.join;
+import static java.lang.String.valueOf;
 
 public class FoodActivity extends AppCompatActivity implements FoodRequest.Callback {
 
     EditText editText;
+    ArrayList<Integer> responseId = new ArrayList<>();
+    ArrayList<String> responseName = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +59,21 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
     // Listener for the "Get started!" button, go to the next screen
     // Create a game when the food items are loaded successfully
     @Override
-    public void gotFood(ArrayList<String> response) {
+    public void gotFood(ArrayList<ArrayList> response) {
+
+        Integer size = response.size();
+        for(int l=0; l<size-1; l++){
+            ArrayList array = response.get(l);
+
+            Integer id = (Integer) array.get(0);
+            responseId.add(id);
+
+            String name = (String) array.get(1);
+            responseName.add(name);
+        }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_1, response);
+                this, android.R.layout.simple_list_item_1, responseName);
 
         ListView listView = findViewById(R.id.foodList);
         listView.setAdapter(arrayAdapter);
@@ -78,10 +94,10 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
             // Retrieve chosen item
-            String clickedListItem = (String) adapterView.getItemAtPosition(i);
-            //String clickedItem = clickedListItem.get(0).toString();
+            String name = responseName.get(i);
+            String id = valueOf(responseId.get(i));
 
-            Toast.makeText(FoodActivity.this, clickedListItem, Toast.LENGTH_SHORT).show();
+            toNext(id);
         }
     }
 
@@ -91,12 +107,19 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
 
         @Override
         public void onClick(View view) {
-            toNext();
+            Request();
         }
     }
 
 
-    public void toNext() {
+    public void toNext(String id) {
+        Intent intent = new Intent(this, AmountActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+    }
+
+
+    public void Request() {
         FoodRequest request = new FoodRequest(this);
         request.getFood(this, editText.getText().toString());
     }

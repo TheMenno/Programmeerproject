@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimary"
-    tools:context=".MealActivity">
+    tools:context=".AmountActivity">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -17,7 +17,7 @@
         android:background="@color/white">
 
         <Button
-            android:id="@+id/mealBackButton"
+            android:id="@+id/foodBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,11 +30,10 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/meal_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Breakfast"
+            android:text="Food"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
@@ -50,61 +49,28 @@
             android:visibility="invisible"/>
     </LinearLayout>
 
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="15dp"
-        android:layout_weight="1">
-
-        <ListView
-            android:id="@+id/meal_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-        </ListView>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="end"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:background="@color/white">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="invisible"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
         <TextView
-            android:id="@+id/meal_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Total: 261 calories"
-            android:textSize="20sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="Enter the name amount"/>
 
         <Button
-            android:id="@+id/mealAddButton"
+            android:id="@+id/foodSearchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Add item"/>
-    </LinearLayout>
+            android:layout_weight="1"
+            android:text="Add product"/>
 
+    </LinearLayout>
 </LinearLayout>

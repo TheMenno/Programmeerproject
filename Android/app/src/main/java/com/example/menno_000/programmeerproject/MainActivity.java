@@ -1,62 +1,69 @@
 package com.example.menno_000.programmeerproject;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Array;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements FoodRequest.Callback {
+import static java.lang.Integer.parseInt;
 
+public class MainActivity extends AppCompatActivity/* implements FoodRequest.Callback*/ {
+
+    StoredFoodDatabase storedFoodDatabase;
     Class activity;
-    ListView listView;
-    TextView textView;
+    TextView dateView;
+    ArrayList<ArrayList> listItems = new ArrayList<>();
+    Integer totalCal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FoodRequest request = new FoodRequest(this);
-        request.getFood(this);
+        // Database
+        storedFoodDatabase = StoredFoodDatabase.getInstance(getApplicationContext());
 
-        listView = findViewById(R.id.mainList);
-        textView = findViewById(R.id.mainDatePicker);
+        // ListView Adapter
+        PrepareAdapter();
+        ListView listView = findViewById(R.id.listView_main);
+        MainAdapter adapter = new MainAdapter(this, R.layout.entryrow_main, listItems);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new MealItemClickListener());
+
+        // Buttons
         Button graphButton = findViewById(R.id.mainGraphButton);
         Button userButton = findViewById(R.id.mainUserButton);
 
-        //listView.setOnItemClickListener(new MealItemClickListener());
+        // Listeners
         graphButton.setOnClickListener(new MainActivity.ButtonClickListener());
         userButton.setOnClickListener(new MainActivity.ButtonClickListener());
-    }
 
+        // Date
+        dateView = findViewById(R.id.mainDatePicker);
+        Date date = Calendar.getInstance().getTime();
+        String day          = (String) DateFormat.format("EEEE", date);
+        String daynumber    = (String) DateFormat.format("dd",   date);
+        String monthString  = (String) DateFormat.format("MMMM",  date);
+        dateView.setText(day + ", " + daynumber + " " + monthString);
 
-    // Create a game when the food items are loaded successfully
-    @Override
-    public void gotFood(ArrayList<String> response) {
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, response);
-
-        listView.setAdapter(arrayAdapter);
-    }
-
-
-    // Error message
-    @Override
-    public void gotFoodError(String message) {
-
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        // Total
+        TextView totalView = findViewById(R.id.calorie_total);
+        totalView.setText("Total: " + totalCal + " calories");
     }
 
 
@@ -83,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements FoodRequest.Callb
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
             // Retrieve chosen meal
-            String clickedMeal = (String) adapterView.getItemAtPosition(i);
+            ArrayList clickedListItem = (ArrayList) adapterView.getItemAtPosition(i);
+            String clickedMeal = clickedListItem.get(0).toString();
 
             // Give info to new view
             Intent intent = new Intent(MainActivity.this, MealActivity.class);
@@ -91,6 +99,49 @@ public class MainActivity extends AppCompatActivity implements FoodRequest.Callb
             startActivity(intent);
         }
     }
+
+
+
+    public void PrepareAdapter() {
+
+        Integer breakfastCal = 0;
+        Integer lunchCal = 0;
+        Integer dinnerCal = 0;
+        Integer snacksCal = 0;
+
+        final Cursor cursor = storedFoodDatabase.selectAll();
+        if (cursor != null) {
+            if (cursor.moveToFirst()){
+                do{
+                    String meal = cursor.getString( cursor.getColumnIndex("meal") );
+                    Integer calories = cursor.getInt( cursor.getColumnIndex("calories") );
+                    switch(meal) {
+                        case "Breakfast":
+                            breakfastCal += calories;
+                            break;
+                        case "Lunch":
+                            lunchCal += calories;
+                            break;
+                        case "Dinner":
+                            dinnerCal += calories;
+                            break;
+                        case "Snacks":
+                            snacksCal += calories;
+                            break;
+                    }
+                } while(cursor.moveToNext());
+            }
+            cursor.close();
+        }
+
+        totalCal = breakfastCal + lunchCal + dinnerCal + snacksCal;
+
+        listItems.add(new ArrayList<>(Arrays.asList("Breakfast", breakfastCal.toString())));
+        listItems.add(new ArrayList<>(Arrays.asList("Lunch", lunchCal.toString())));
+        listItems.add(new ArrayList<>(Arrays.asList("Dinner", dinnerCal.toString())));
+        listItems.add(new ArrayList<>(Arrays.asList("Snacks", snacksCal.toString())));
+    }
+
 
 
     // Go to the next screen

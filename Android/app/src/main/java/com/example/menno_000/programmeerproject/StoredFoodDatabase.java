@@ -50,10 +50,14 @@ public class StoredFoodDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        String sql = "CREATE TABLE " + TABLE + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                API_ID + " INTEGER NOT NULL, " + PRODUCT_NAME + " TEXT NOT NULL, " + CALORIES +
-                " INTEGER NOT NULL, " + AMOUNT + " INTEGER NOT NULL, " + DATE +
-                " DATETIME DEFAULT CURRENT_TIMESTAMP, "  + MEAL + " STRING NOT NULL);";
+        String sql = "CREATE TABLE " + TABLE + "(" +
+                ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                API_ID + " INTEGER NOT NULL, " +
+                PRODUCT_NAME + " TEXT NOT NULL, " +
+                CALORIES + " INTEGER NOT NULL, " +
+                AMOUNT + " INTEGER NOT NULL, " +
+                DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP, "  +
+                MEAL + " STRING NOT NULL);";
 
         sqLiteDatabase.execSQL(sql);
     }

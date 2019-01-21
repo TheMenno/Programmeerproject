@@ -39,14 +39,15 @@ public class FoodRequest implements Response.Listener<JSONObject>, Response.Erro
         // Set up a queue
         RequestQueue queue = Volley.newRequestQueue(context);
 
-        // Create the data request
-        String offset = "0";
-        String amount = "200";
-        String key = "nGHKa4ZmkXSTIiLWoLIzQKVs3jHIWAcvH0l8OGGI";
-
         // Create the url
-        String url ="https://api.nal.usda.gov/ndb/search/?format=json&q=" + search + "&max=" +
-                amount + "&offset=" + offset + "&api_key=" + key + "&ds=Standard Reference&sort=r";
+        String url ="https://api.nal.usda.gov/ndb/search/" +
+                "?format=json" +
+                "&q=" + search +
+                "&max=200" +
+                "&offset=0" +
+                "&api_key=nGHKa4ZmkXSTIiLWoLIzQKVs3jHIWAcvH0l8OGGI" +
+                "&ds=Standard Reference" +
+                "&sort=r";
 
         // Create the request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,

@@ -23,7 +23,7 @@ public class DataRequest implements Response.Listener<JSONObject>, Response.Erro
     private Callback callback;
 
     public interface Callback {
-        void gotData(JSONArray data);
+        void gotData(JSONObject data);
         void gotDataError(String message);
     }
 
@@ -67,9 +67,10 @@ public class DataRequest implements Response.Listener<JSONObject>, Response.Erro
 
             // Open the results
             JSONArray raw_JSON = response.getJSONArray("foods");
-            //JSONObject raw_JSONObject = JSONArray.getJSONObject("food");
+            JSONObject raw_OBJECT = raw_JSON.getJSONObject(0);
+            JSONObject raw_food = raw_OBJECT.getJSONObject("food");
 
-            callback.gotData(raw_JSON);
+            callback.gotData(raw_food);
         } catch (JSONException e) {
             // Error message
             e.printStackTrace();

@@ -30,6 +30,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/name_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -58,12 +59,19 @@
         android:gravity="center"
         android:background="@color/white">
 
+        <EditText
+            android:id="@+id/edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="Enter the amount"/>
+
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:hint="Enter the name amount"/>
+            android:hint="Every thing is x calories"/>
 
         <Button
             android:id="@+id/foodSearchButton"

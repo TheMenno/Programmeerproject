@@ -3,6 +3,8 @@ package com.example.menno_000.programmeerproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +21,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static java.lang.Integer.valueOf;
+
 public class AmountActivity extends AppCompatActivity implements DataRequest.Callback {
 
-    String name;
+    String name, api_id;
     Integer calories;
-    String api_id;
+    TextView nameView, measureView;
+    StoredFoodDatabase storedFoodDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,31 +42,50 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
         // Data request
         DataRequest request = new DataRequest(this);
         request.getData(this, api_id);
+
+        // Views
+        nameView = findViewById(R.id.name_amount);
+        measureView = findViewById(R.id.measure);
+
+        // Database
+        storedFoodDatabase = StoredFoodDatabase.getInstance(getApplicationContext());
     }
 
 
-    // Listener for the "Get started!" button, go to the next screen
-    // Create a game when the food items are loaded successfully
     @Override
     public void gotData(JSONObject response) {
 
         try {
             JSONObject raw_info = response.getJSONObject("desc");
-            name = (String) raw_info.get("name");
-
             JSONArray raw_nutrients = response.getJSONArray("nutrients");
             JSONObject raw_values = raw_nutrients.getJSONObject(1);
+
+            name = (String) raw_info.get("name");
             calories = raw_values.getInt("value");
+
+            JSONArray measures = raw_values.getJSONArray("measures");
+
+            if (measures.get(0) instanceof String) {
+
+                String label = (String) measures.get(0);
+                String qty = (String) measures.get(3);
+                String amount = (String) measures.get(4);
+                measureView.setText(qty + " " + label + " equals " + amount + " calories");
+            } else {
+                JSONObject object = (JSONObject) measures.get(0);
+
+                String label = (String) object.get("label");
+                Double qty = (Double) object.get("qty");
+                String amount = (String) object.get("value");
+                measureView.setText(qty.toString() + " " + label + " equals " + amount + " calories");
+            }
+
+            nameView.setText(name);
         } catch (JSONException e) {
             // Error message
             e.printStackTrace();
             this.gotDataError("No results found, try something else!");
         }
-
-        TextView nameView = findViewById(R.id.name_amount);
-        TextView calorieView = findViewById(R.id.text);
-        nameView.setText(name);
-        calorieView.setText(calories.toString());
     }
 
     // Error message
@@ -69,5 +93,15 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
     public void gotDataError(String message) {
 
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
+    // Listener for the buttons, go to the next/previous screen
+    public class ButtonClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            storedFoodDatabase.insert(new Food(valueOf(api_id), name, 40, 1, "Breakfast"));
+        }
     }
 }

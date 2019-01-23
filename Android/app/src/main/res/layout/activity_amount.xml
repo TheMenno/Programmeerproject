@@ -16,14 +16,6 @@
         android:layout_height="75dp"
         android:background="@color/white">
 
-        <Button
-            android:id="@+id/foodBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Back"
-            android:visibility="invisible"/>
-
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -42,12 +34,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="invisible"/>
     </LinearLayout>
 
     <LinearLayout
@@ -60,25 +46,34 @@
         android:background="@color/white">
 
         <EditText
-            android:id="@+id/edittext"
+            android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:hint="Enter the amount"/>
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:hint="Every thing is x calories"/>
-
         <Button
-            android:id="@+id/foodSearchButton"
+            android:id="@+id/amountAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Add product"/>
+    </LinearLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/measure"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="Every thing is x calories"/>
     </LinearLayout>
 </LinearLayout>

@@ -95,6 +95,15 @@ public class StoredFoodDatabase extends SQLiteOpenHelper {
     }
 
 
+    // Retrieve an instance
+    public Cursor selectMeal(String meal) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE + " WHERE " + MEAL + " = '" +
+                meal + "'",null);
+        return cursor;
+    }
+
+
     // Delete an instance
     public void delete(long id) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();

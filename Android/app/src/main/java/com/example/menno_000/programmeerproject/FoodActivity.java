@@ -28,11 +28,16 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
     EditText editText;
     ArrayList<Integer> responseId = new ArrayList<>();
     ArrayList<String> responseName = new ArrayList<>();
+    String retrievedMeal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food);
+
+        // Intent
+        Intent intent = getIntent();
+        retrievedMeal = (String) intent.getSerializableExtra("meal");
 
         //Button backButton = findViewById(R.id.foodBackButton);
         Button searchButton = findViewById(R.id.foodSearchButton);
@@ -115,6 +120,7 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
     public void toNext(String id) {
         Intent intent = new Intent(this, AmountActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("meal", retrievedMeal);
         startActivity(intent);
     }
 

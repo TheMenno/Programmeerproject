@@ -14,29 +14,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MealAdapter extends ArrayAdapter {
-    public MealAdapter(Context context, int resource, @NonNull ArrayList<ArrayList> objects) {
-        super(context, R.layout.entryrow_meal, objects);
+public class MealAdapter extends ResourceCursorAdapter {
+    public MealAdapter(Context context, Cursor cursor) {
+        super(context, R.layout.entryrow_meal, cursor);
     }
 
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public void bindView(View view, Context context, Cursor cursor) {
 
-        // A new view must be inflated
-        if(convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.entryrow_meal, parent, false);
-        }
+        String food = cursor.getString(cursor.getColumnIndex("product"));
+        String calories = cursor.getString(cursor.getColumnIndex("calories"));;
 
-        // Access the right student in the list
-        ArrayList currentFood = (ArrayList) getItem(position);
+        TextView mealText = view.findViewById(R.id.food_row);
+        TextView calorieText = view.findViewById(R.id.calorie_row);
 
-        // Make changes to the convertView, such as displaying a certain text
-        TextView mealText = convertView.findViewById(R.id.food_row);
-        TextView calorieText = convertView.findViewById(R.id.calorie_row);
-
-        mealText.setText(currentFood.get(1).toString());
-        calorieText.setText(currentFood.get(2).toString() + " calories");
-
-        return convertView;
+        mealText.setText(food);
+        calorieText.setText(calories + " cal.");
     }
 }

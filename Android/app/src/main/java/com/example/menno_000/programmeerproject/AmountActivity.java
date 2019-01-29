@@ -25,10 +25,11 @@ import static java.lang.Integer.valueOf;
 
 public class AmountActivity extends AppCompatActivity implements DataRequest.Callback {
 
-    String name, api_id;
+    String name, api_id, retrievedMeal;
     Integer calories;
     TextView nameView, measureView;
     StoredFoodDatabase storedFoodDatabase;
+    EditText edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
         // Intent
         Intent intent = getIntent();
         api_id = (String) intent.getSerializableExtra("id");
+        retrievedMeal = (String) intent.getSerializableExtra("meal");
 
         // Data request
         DataRequest request = new DataRequest(this);
@@ -46,6 +48,11 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
         // Views
         nameView = findViewById(R.id.name_amount);
         measureView = findViewById(R.id.measure);
+        Button addButton = findViewById(R.id.amountAddButton);
+        edit = findViewById(R.id.editText);
+
+        // Listeners
+        addButton.setOnClickListener(new ButtonClickListener());
 
         // Database
         storedFoodDatabase = StoredFoodDatabase.getInstance(getApplicationContext());
@@ -101,7 +108,29 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
 
         @Override
         public void onClick(View view) {
-            storedFoodDatabase.insert(new Food(valueOf(api_id), name, 40, 1, "Breakfast"));
+            if (edit.getText().toString().equals("")) {
+                Toast.makeText(AmountActivity.this, "Please enter something", Toast.LENGTH_SHORT).show();
+            } else {
+                Integer amount = valueOf(edit.getText().toString());
+
+                storedFoodDatabase.insert(
+                        new Food(
+                                valueOf(api_id),
+                                name,
+                                calories * amount,
+                                amount,
+                                retrievedMeal));
+                goToNext();
+            }
         }
+    }
+
+    public void goToNext() {
+
+        // Give info to new view
+        Intent intent = new Intent(AmountActivity.this, MealActivity.class);
+        intent.putExtra("clickedMeal", retrievedMeal);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

@@ -50,7 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:hint="Enter the amount"/>
+            android:hint="Enter the amount"
+            android:inputType="number"/>
 
         <Button
             android:id="@+id/amountAddButton"

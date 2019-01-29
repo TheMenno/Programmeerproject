@@ -9,18 +9,22 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static java.lang.Integer.valueOf;
 
 public class MealActivity extends AppCompatActivity {
 
     StoredFoodDatabase storedFoodDatabase;
     Class activity;
     String retrievedMeal;
-    Integer totalCal = 0;
-    TextView mealView, totalView;
+    Integer cals = 0;
+    TextView mealView, calView;
     ArrayList<ArrayList> foodList = new ArrayList();
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,25 +38,55 @@ public class MealActivity extends AppCompatActivity {
         Intent intent = getIntent();
         retrievedMeal = (String) intent.getSerializableExtra("clickedMeal");
 
-        // Adapter
-        PrepareAdapter();
-        ListView listView = findViewById(R.id.meal_list);
-        MealAdapter adapter = new MealAdapter(this, R.layout.entryrow_meal, foodList);
-        listView.setAdapter(adapter);
-
         // Views
         mealView = findViewById(R.id.meal_name);
-        totalView = findViewById(R.id.meal_total);
-        Button backButton = findViewById(R.id.mealBackButton);
+        calView = findViewById(R.id.meal_total);
         Button addButton = findViewById(R.id.mealAddButton);
 
         // Initialise views
         mealView.setText(retrievedMeal);
-        totalView.setText("Total: " + totalCal.toString() + " calories");
+        Cursor cursor = storedFoodDatabase.selectMeal(retrievedMeal);
+        while (cursor.moveToNext()) {
+            cals += valueOf(cursor.getString(3));
+        }
+        calView.setText("Total: " + cals.toString() + " calories");
+
+        // Adapter
+        listView = findViewById(R.id.meal_list);
+        MealAdapter adapter = new MealAdapter(this, storedFoodDatabase.selectMeal(retrievedMeal));
+        listView.setAdapter(adapter);
 
         // Listeners
-        backButton.setOnClickListener(new MealActivity.ButtonClickListener());
+        listView.setOnItemLongClickListener(new OnLongItemClickListener());
         addButton.setOnClickListener(new MealActivity.ButtonClickListener());
+    }
+
+
+    // Deletes entry on long click
+    private class OnLongItemClickListener implements AdapterView.OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            // Delete chosen entry
+            storedFoodDatabase.delete(l);
+
+            // Update the listview
+            MealAdapter adapter = new MealAdapter(MealActivity.this, storedFoodDatabase
+                    .selectMeal(retrievedMeal));
+            listView.setAdapter(adapter);
+
+            // Reset the total calorie amount
+            Cursor cursor = storedFoodDatabase.selectMeal(retrievedMeal);
+            while (cursor.moveToNext()) {
+                cals += valueOf(cursor.getString(3));
+            }
+            calView.setText("Total: " + cals.toString() + " calories");
+
+            // Notify the user
+            Toast.makeText(MealActivity.this, "Item was deleted", Toast.LENGTH_SHORT).show();
+
+            return false;
+        }
     }
 
 
@@ -73,28 +107,6 @@ public class MealActivity extends AppCompatActivity {
     }
 
 
-    public void PrepareAdapter() {
-
-        final Cursor cursor = storedFoodDatabase.selectAll();
-        if (cursor != null) {
-            if (cursor.moveToFirst()){
-                do{
-                    String meal = cursor.getString( cursor.getColumnIndex("meal") );
-                    if (meal.equals(retrievedMeal)) {
-                        String id = cursor.getString( cursor.getColumnIndex("_id") );
-                        String name = cursor.getString( cursor.getColumnIndex("product") );
-                        Integer cals = cursor.getInt( cursor.getColumnIndex("calories") );
-
-                        foodList.add( new ArrayList<>( Arrays.asList(id, name, cals.toString()) ) );
-                        totalCal += cals;
-                    }
-                } while(cursor.moveToNext());
-            }
-            cursor.close();
-        }
-    }
-
-
     // Go to the next screen
     public void goToNext(String clickedButton) {
 
@@ -108,6 +120,7 @@ public class MealActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, activity);
+        intent.putExtra("meal", retrievedMeal);
         startActivity(intent);
     }
 }

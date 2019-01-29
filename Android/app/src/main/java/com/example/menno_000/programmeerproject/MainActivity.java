@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
         userButton.setOnClickListener(new MainActivity.ButtonClickListener());
 
         // Date
-        dateView = findViewById(R.id.mainDatePicker);
-        Date date = Calendar.getInstance().getTime();
+        dateView            = findViewById(R.id.mainDatePicker);
+        Date date           = Calendar.getInstance().getTime();
         String day          = (String) DateFormat.format("EEEE", date);
         String daynumber    = (String) DateFormat.format("dd",   date);
         String monthString  = (String) DateFormat.format("MMMM",  date);
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
         @Override
         public void onClick(View view) {
             switch(view.getId()) {
+
                 case(R.id.mainGraphButton):
                     goToNext("graph");
                     break;
@@ -96,13 +97,12 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
             // Give info to new view
             Intent intent = new Intent(MainActivity.this, MealActivity.class);
             intent.putExtra("clickedMeal", clickedMeal);
-            intent.putExtra("calories", totalCal);
             startActivity(intent);
         }
     }
 
 
-
+    // Retrieves data to fill in the adapter
     public void PrepareAdapter() {
 
         Integer breakfastCal = 0;
@@ -116,7 +116,10 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
                 do{
                     String meal = cursor.getString( cursor.getColumnIndex("meal") );
                     Integer calories = cursor.getInt( cursor.getColumnIndex("calories") );
+                    Integer amount = cursor.getInt( cursor.getColumnIndex("amount") );
+
                     switch(meal) {
+
                         case "Breakfast":
                             breakfastCal += calories;
                             break;
@@ -142,7 +145,6 @@ public class MainActivity extends AppCompatActivity/* implements FoodRequest.Cal
         listItems.add(new ArrayList<>(Arrays.asList("Dinner", dinnerCal.toString())));
         listItems.add(new ArrayList<>(Arrays.asList("Snacks", snacksCal.toString())));
     }
-
 
 
     // Go to the next screen

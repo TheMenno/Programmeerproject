@@ -41,6 +41,7 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
         api_id = (String) intent.getSerializableExtra("id");
         retrievedMeal = (String) intent.getSerializableExtra("meal");
 
+
         // Data request
         DataRequest request = new DataRequest(this);
         request.getData(this, api_id);
@@ -68,7 +69,7 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
             JSONObject raw_values = raw_nutrients.getJSONObject(1);
 
             name = (String) raw_info.get("name");
-            calories = raw_values.getInt("value");
+            //calories = raw_values.getInt("value");
 
             JSONArray measures = raw_values.getJSONArray("measures");
 
@@ -76,15 +77,15 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
 
                 String label = (String) measures.get(0);
                 String qty = (String) measures.get(3);
-                String amount = (String) measures.get(4);
-                measureView.setText(qty + " " + label + " equals " + amount + " calories");
+                calories = valueOf(measures.get(4).toString());
+                measureView.setText(qty + " " + label + " equals " + calories + " calories");
             } else {
                 JSONObject object = (JSONObject) measures.get(0);
 
                 String label = (String) object.get("label");
                 Double qty = (Double) object.get("qty");
-                String amount = (String) object.get("value");
-                measureView.setText(qty.toString() + " " + label + " equals " + amount + " calories");
+                calories = valueOf(object.get("value").toString());
+                measureView.setText(qty.toString() + " " + label + " equals " + calories + " calories");
             }
 
             nameView.setText(name);
@@ -100,6 +101,11 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
     public void gotDataError(String message) {
 
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+        /*Intent intent = new Intent(AmountActivity.this, FoodActivity.class);
+        intent.putExtra("meal", retrievedMeal);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);*/
     }
 
 
@@ -120,6 +126,9 @@ public class AmountActivity extends AppCompatActivity implements DataRequest.Cal
                                 calories * amount,
                                 amount,
                                 retrievedMeal));
+
+                Toast.makeText(AmountActivity.this, calories.toString() + " calories", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AmountActivity.this, amount.toString() + " units", Toast.LENGTH_SHORT).show();
                 goToNext();
             }
         }

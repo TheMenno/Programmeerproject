@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.sql.Array;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -28,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     StoredFoodDatabase storedFoodDatabase;
     Class activity;
-    TextView dateView;
+    TextView datePickView, totalView;
+    ListView listView;
     ArrayList<ArrayList> listItems = new ArrayList<>();
-    Integer totalCal;
     DatePickerDialog dpd;
     Calendar calendar;
+    Integer totalCal, day, month, year;
+    String adjustedDay, adjustedMonth;
+    MainAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,35 +46,29 @@ public class MainActivity extends AppCompatActivity {
         // Database
         storedFoodDatabase = StoredFoodDatabase.getInstance(getApplicationContext());
 
-        // ListView Adapter
-        PrepareAdapter();
-        ListView listView = findViewById(R.id.main_list);
-        MainAdapter adapter = new MainAdapter(this, R.layout.entryrow_main, listItems);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new MealItemClickListener());
+        // Calendar
+        calendar = Calendar.getInstance();
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        month = calendar.get(Calendar.MONTH) + 1;
+        year = calendar.get(Calendar.YEAR);
 
-        // Buttons
+        // Views
         Button graphButton = findViewById(R.id.mainGraphButton);
         Button userButton = findViewById(R.id.mainUserButton);
-        TextView datePicker = findViewById(R.id.mainDatePicker);
+        datePickView = findViewById(R.id.mainDatePicker);
+        listView = findViewById(R.id.main_list);
+        totalView = findViewById(R.id.main_total);
 
+        // ListView Adapter
+        PrepareAdapter();
+        adapter = new MainAdapter(this, R.layout.entryrow_main, listItems);
+        listView.setAdapter(adapter);
 
         // Listeners
         graphButton.setOnClickListener(new MainActivity.ButtonClickListener());
         userButton.setOnClickListener(new MainActivity.ButtonClickListener());
-        datePicker.setOnClickListener(new MainActivity.DatePickListener());
-
-        // Date
-        dateView            = findViewById(R.id.mainDatePicker);
-        Date date           = Calendar.getInstance().getTime();
-        String day          = (String) DateFormat.format("dd",   date);
-        String monthString  = (String) DateFormat.format("M",  date);
-        String year         = (String) DateFormat.format("yy", date);
-        dateView.setText(day + "-" + monthString + "-" + year);
-
-        // Total
-        TextView totalView = findViewById(R.id.main_total);
-        totalView.setText("Total: " + totalCal + " calories");
+        datePickView.setOnClickListener(new MainActivity.DatePickListener());
+        listView.setOnItemClickListener(new MealItemClickListener());
     }
 
 
@@ -98,19 +96,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
 
-            calendar = Calendar.getInstance();
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH);
-            int year = calendar.get(Calendar.YEAR);
-
             dpd = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int y, int m, int d) {
 
-                    TextView tempDatePicker = findViewById(R.id.mainDatePicker);
-                    tempDatePicker.setText(d + "-" + m+1 + "-" + y);
+                    day = d;
+                    month = m + 1;
+                    year = y;
+
+                    PrepareAdapter();
+                    adapter.notifyDataSetChanged();
                 }
-            }, year, month, day);
+            }, year, month - 1, day);
             dpd.show();
         }
     }
@@ -147,29 +144,55 @@ public class MainActivity extends AppCompatActivity {
                 do{
                     String meal = cursor.getString( cursor.getColumnIndex("meal") );
                     Integer calories = cursor.getInt( cursor.getColumnIndex("calories") );
-                    Integer amount = cursor.getInt( cursor.getColumnIndex("amount") );
+                    Timestamp date = (Timestamp.valueOf(cursor.getString( cursor.getColumnIndex("date") ) ) );
 
-                    switch(meal) {
+                    String dataYear = date.toString().substring(0,4);
+                    String dataMonth = date.toString().substring(5,7);
+                    String dataDay = date.toString().substring(8,10);
 
-                        case "Breakfast":
-                            breakfastCal += calories;
-                            break;
-                        case "Lunch":
-                            lunchCal += calories;
-                            break;
-                        case "Dinner":
-                            dinnerCal += calories;
-                            break;
-                        case "Snacks":
-                            snacksCal += calories;
-                            break;
+                    if(day.toString().length() == 1) {
+                        adjustedDay = "0" + day.toString();
+                    } else {
+                        adjustedDay = day.toString();
+                    }
+
+                    if(month.toString().length() == 1) {
+                        adjustedMonth = "0" + month.toString();
+                    } else {
+                        adjustedMonth = month.toString();
+                    }
+
+                    if (( dataYear.equals( year.toString() )) &&
+                        ( dataMonth.equals( adjustedMonth )) &&
+                        ( dataDay.equals( adjustedDay ))) {
+
+                        switch(meal) {
+
+                            case "Breakfast":
+                                breakfastCal += calories;
+                                break;
+                            case "Lunch":
+                                lunchCal += calories;
+                                break;
+                            case "Dinner":
+                                dinnerCal += calories;
+                                break;
+                            case "Snacks":
+                                snacksCal += calories;
+                                break;
+                        }
                     }
                 } while(cursor.moveToNext());
             }
             cursor.close();
         }
 
-        totalCal = breakfastCal + lunchCal + dinnerCal + snacksCal;
+        datePickView.setText(adjustedDay + "-" + adjustedMonth + "-" + year.toString());
+
+        totalCal = 0 + breakfastCal + lunchCal + dinnerCal + snacksCal;
+        totalView.setText("Total: " + totalCal.toString() + " calories");
+
+        listItems.clear();
 
         listItems.add(new ArrayList<>(Arrays.asList("Breakfast", breakfastCal.toString())));
         listItems.add(new ArrayList<>(Arrays.asList("Lunch", lunchCal.toString())));
@@ -192,5 +215,29 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+    }
+
+
+    // Overriding app settings so progress will be saved between swapping views
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("day", day);
+        outState.putInt("month", month);
+        outState.putInt("year", year);
+    }
+
+    // Overriding app settings so progress will be restored between swapping views
+    @Override
+    public void onRestoreInstanceState(Bundle inState) {
+        super.onRestoreInstanceState(inState);
+
+        day = inState.getInt("day");
+        month = inState.getInt("month");
+        year = inState.getInt("year");
+
+        PrepareAdapter();
+        adapter.notifyDataSetChanged();
     }
 }

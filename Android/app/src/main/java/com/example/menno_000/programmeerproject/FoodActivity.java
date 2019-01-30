@@ -1,11 +1,13 @@
 package com.example.menno_000.programmeerproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,6 +40,7 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
         // Intent
         Intent intent = getIntent();
         retrievedMeal = (String) intent.getSerializableExtra("meal");
+
 
         //Button backButton = findViewById(R.id.foodBackButton);
         Button searchButton = findViewById(R.id.foodSearchButton);
@@ -112,7 +115,13 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
 
         @Override
         public void onClick(View view) {
+
+            responseName.clear();
+            responseId.clear();
+
             Request();
+
+            hideKeyboard(FoodActivity.this);
         }
     }
 
@@ -128,5 +137,17 @@ public class FoodActivity extends AppCompatActivity implements FoodRequest.Callb
     public void Request() {
         FoodRequest request = new FoodRequest(this);
         request.getFood(this, editText.getText().toString());
+    }
+
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
